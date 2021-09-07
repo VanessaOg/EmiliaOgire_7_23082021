@@ -32,11 +32,7 @@ exports.signup = (req, res, next) => {
 
 	// à faire si email valide et existe alors l'email existe déjà veillez le changer ou vous connecter
 	if (emailValidator.validate(req.body.email)) {
-		if (User.findOne({ where: { email: req.params.email } })) {
-			return res
-				.status(400)
-				.json({ error: "Cet email existe déjà veillez le changer ou vous connecter" });
-		} else if (schemaPassword.validate(req.body.password)) {
+		if (schemaPassword.validate(req.body.password)) {
 			bcrypt
 				.hash(req.body.password, 10) //la methode hash fait 10 tour de l'algorithme pour crypter le mdp
 				.then((hash) => {
@@ -47,9 +43,11 @@ exports.signup = (req, res, next) => {
 						bio: req.body.bio,
 						isAdmin: 0,
 					});
-					User.create(user)
-						.save()
-						.then(() => res.status(201).json({ message: "Utilisateur créé !" }))
+					user
+						.create(user)
+						.then((user) => {
+							res.status(201).json({ message: "Utilisateur créé !" });
+						})
 						.catch((error) => res.status(400).json({ error }));
 				})
 				.catch((error) => res.status(500).json({ error }));

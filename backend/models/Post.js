@@ -30,7 +30,7 @@ const Post = sequelize.define(
 );
 
 // Création de la table
-Post.sync()
-	.then(() => console.log("Table  Post created"))
-	.catch((error) => console.log(error));
+// Post.sync()
+// 	.then(() => console.log("Table  Post created"))
+// 	.catch((error) => console.log(error));
 module.exports = Post;

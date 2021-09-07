@@ -1,6 +1,6 @@
 // chargement des modules
 const express = require("express");
-const exphbs = require("express-handlebars");
+
 const bodyParser = require("body-parser");
 
 // Pour sécuriser les headers
@@ -23,20 +23,27 @@ const db = require("./config/database");
 
 const app = express();
 
+// Chargement des models
+const Post = require("./models/Post");
+const User = require("./models/User");
+
+User.hasMany(Post);
+Post.belongsTo(User);
+
 // déclaration des routes
-const postsRoutes = require("./routes/posts");
+// const postsRoutes = require("./routes/posts");
 const usersRoutes = require("./routes/users");
 
 // Test DB
-// async function test() {
-// 	try {
-// 		await db.authenticate();
-// 		console.log("Connection has been established successfully.");
-// 		await db.sync({ force: true });
-// 	} catch (error) {
-// 		console.error("Unable to connect to the database:", error);
-// 	}
-// }
+async function test() {
+	try {
+		await db.authenticate();
+		console.log("Connection has been established successfully.");
+		await db.sync({ force: true });
+	} catch (error) {
+		console.error("Unable to connect to the database:", error);
+	}
+}
 // ***************Cross Origin Resource Sharing*******************//
 app.use((req, res, next) => {
 	res.setHeader("Access-Control-Allow-Origin", "*");
@@ -59,9 +66,9 @@ app.use(helmet());
 // Emplacement statique des images
 app.use("/images", express.static(path.join(__dirname, "images")));
 
-app.use("/api/posts", postsRoutes);
+// app.use("/api/posts", postsRoutes);
 app.use("/api/auth", usersRoutes);
 
-// test();
+test();
 
 module.exports = app;
